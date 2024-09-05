@@ -10,12 +10,15 @@ import icon03 from "../assets/images/icon03.png";
 import featureImg from "../assets/images/feature-img.png";
 import videoIcon from "../assets/images/video-icon.png";
 import avatarIcon from "../assets/images/avatar-icon.png";
+import faqImg from "../assets/images/faq-img.png";
 import { BsArrowRight } from "react-icons/bs";
 // import About from "../components/About/About.jsx";
 import About from "../components/About/About.jsx";
 import DoctorList from "../components/Doctors/DoctorList.jsx";
 import { services } from "../assets/data/services.js";
 import Services from "../components/Services/Services.jsx";
+import FaqList from "../components/faq/FaqList.jsx";
+import TestimoniList from "../components/Testimoni/TestimoniList.jsx";
 
 const Home = () => {
   return (
@@ -264,6 +267,38 @@ const Home = () => {
 
           <DoctorList />
         </div>
+      </section>
+
+      {/* faq section */}
+      <section>
+        <div className="container">
+          <div className="flex justify-between gap-[50px] lg:gap-0">
+            <div className="w-1/2 hidden md:block">
+              <img src={faqImg} alt="" />
+            </div>
+            <div className="w-full md:w-1/2">
+              <h2 className="heading">
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Neque,
+                facere.
+              </h2>
+              <FaqList />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* testimonial */}
+
+      <section>
+        <div className="xl-w[470px] mx-auto">
+          <h2 className="heading text-center">What Our patinet say</h2>
+          <p className="text__para text-center">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates
+            eligendi corrupti at natus et veniam?
+          </p>
+        </div>
+
+        <TestimoniList />
       </section>
     </>
   );
