@@ -12,7 +12,7 @@ const Routers = () => {
   return (
     <Routes>
       <Route path="/home" element={<Home />} />
-      <Route path="/contact" element={<Services />} />
+      <Route path="/services" element={<Services />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<SignUp />} />
       <Route path="/contact" element={<Contact />} />
