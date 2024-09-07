@@ -3,7 +3,7 @@ import doctorImg from "../../assets/images/doctor-img02.png";
 import starIcon from "../../assets/images/Star.png";
 import DoctorsAbout from "./DoctorsAbout";
 import Feedback from "./Feedback";
-
+import SidePanel from "./SidePanel";
 const DoctorDetail = () => {
   const [tab, setTab] = useState("about");
 
@@ -11,6 +11,7 @@ const DoctorDetail = () => {
     <section>
       <div className="max-w-[1170px] px-5 mx-auto">
         <div className="grid md:grid-cols-3 gap-[50px]">
+          {/* Kolom Gambar dan Informasi Dokter */}
           <div className="md:col-span-2 flex items-center">
             <figure className="max-w-[200px]">
               <img
@@ -25,7 +26,7 @@ const DoctorDetail = () => {
                 Ma doeng sok
               </span>
               <h3 className="text-headingColor text-[22px] leading-9 mt-3 font-bold">
-                Muhammad Farhan azidan
+                Muhammad Farhan Azidan
               </h3>
               <div className="flex items-center gap-[6px]">
                 <span className="flex items-center gap-[6px] text-[14px] leading-5 lg:text-[16px]">
@@ -42,7 +43,14 @@ const DoctorDetail = () => {
               </p>
             </div>
           </div>
+
+          {/* Kolom SidePanel */}
+          <div>
+            <SidePanel />
+          </div>
         </div>
+
+        {/* Tab Navigasi */}
         <div className="mt-[50px] border-b border-solid border-[#0066ff34]">
           <button
             onClick={() => setTab("about")}
@@ -62,6 +70,8 @@ const DoctorDetail = () => {
             Feedback
           </button>
         </div>
+
+        {/* Konten Tab */}
         <div className="mt-[50px]">
           {tab === "about" && <DoctorsAbout />}
           {tab === "feedback" && <Feedback />}

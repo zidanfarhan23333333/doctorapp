@@ -4,6 +4,11 @@ import { AiFillStar } from "react-icons/ai";
 const FeedbackForm = () => {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
+  const [review, setReviewText] = useState;
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+  };
 
   return (
     <form action="">
@@ -44,10 +49,13 @@ const FeedbackForm = () => {
         <textarea
           className="border border-solid border-[#0066ff34] focus:outline-primaryColor w-full px-4 py-3 rounded-md"
           rows={5}
-        >
-          Write Your message
-        </textarea>
+          placeholder="write your message"
+          onChange={() => setReviewText(e.target.value)}
+        ></textarea>
       </div>
+      <button type="submit" className="btn" onClick={handleSubmitReview}>
+        Send Feedback
+      </button>
     </form>
   );
 };
