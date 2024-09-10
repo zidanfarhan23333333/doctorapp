@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import authRoute from "./routers/auth.js";
 import userRoute from "./routers/user.js";
+import doctorRoute from "./routers/doctor.js";
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/users", userRoute);
+app.use("/api/v1/doctor", doctorRoute);
 
 // Start server
 app.listen(port, () => {
