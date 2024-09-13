@@ -1,14 +1,66 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { AuthContext } from "../context/authContext";
+import { BASE_URL } from "../../config";
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+  const [loading, setLoading] = useState(false); // Perbaikan disini
+  const navigate = useNavigate();
+  const { dispatch } = useContext(AuthContext);
+
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const submitHandler = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+
+    if (!formData.email || !formData.password) {
+      // Hapus pemeriksaan formData.name dan formData.role
+      toast.error("All fields are required");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch(`${BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await res.json();
+      console.log("Response:", result);
+      if (!res.ok) {
+        throw new Error(result.message || "Login failed");
+      }
+
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: {
+          user: result.data,
+          token: result.token,
+          role: result.role,
+        },
+      });
+
+      console.log(result, "login data");
+
+      toast.success(result.message);
+      navigate("/home");
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -17,7 +69,7 @@ const Login = () => {
         <h3 className="text-headingColor text-[22px] leading-9 font-bold mb-10">
           Hello <span className="text-primaryColor">Welcome</span> Back👌
         </h3>
-        <form className="py-2 md:py-0">
+        <form className="py-2 md:py-0" onSubmit={submitHandler}>
           <div className="mb-5">
             <input
               type="email"

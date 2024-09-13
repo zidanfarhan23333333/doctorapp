@@ -1,22 +1,27 @@
-// SignUp.jsx
 import React, { useState } from "react";
-import { storage } from "../../src/utils/firebase.js"; // Adjust the path to match your structure
+import { storage } from "../../src/utils/firebase.js"; // Adjust the path as needed
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import signUpImg from "../assets/images/signup.gif";
 import avatar from "../assets/images/doctor-img01.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { BASE_URL } from "../../config.js";
+import { toast } from "react-toastify";
+import HashLoader from "react-spinners/HashLoader";
 
 const SignUp = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewURL, setPreviewURL] = useState("");
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    nama: "",
+    name: "",
     email: "",
     password: "",
     photo: "",
     gender: "",
     role: "patient",
   });
+
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,16 +35,15 @@ const SignUp = () => {
     const file = event.target.files[0];
 
     if (file) {
-      const storageRef = ref(storage, `user_photos/${file.name}`); // Create a reference to Firebase storage
+      const storageRef = ref(storage, `user_photos/${file.name}`);
 
-      // Upload file to Firebase Storage
       try {
         await uploadBytes(storageRef, file);
         const downloadURL = await getDownloadURL(storageRef);
 
         setFormData((prevFormData) => ({
           ...prevFormData,
-          photo: downloadURL, // Store the file URL in formData
+          photo: downloadURL,
         }));
 
         // Preview image locally
@@ -58,8 +62,41 @@ const SignUp = () => {
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    console.log(formData);
-    // Perform form submission logic here (e.g., saving data to your database)
+    setLoading(true);
+
+    if (
+      !formData.email ||
+      !formData.password ||
+      !formData.name ||
+      !formData.role
+    ) {
+      toast.error("All fields are required");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch(`${BASE_URL}/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await res.json();
+      console.log("Response:", result);
+      if (!res.ok) {
+        throw new Error(result.message || "Registration failed");
+      }
+
+      toast.success(result.message);
+      navigate("/login");
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -87,8 +124,8 @@ const SignUp = () => {
                   <input
                     type="text"
                     placeholder="Masukkan Nama"
-                    name="nama"
-                    value={formData.nama}
+                    name="name" // Ensure this matches backend
+                    value={formData.name}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 border rounded-md"
                   />
@@ -146,7 +183,7 @@ const SignUp = () => {
                 <div className="mb-5 flex items-center gap-3">
                   <figure className="w-[60px] rounded-full border-solid border-primaryColor flex items-center justify-center">
                     <img
-                      src={previewURL || avatar} // Use previewURL if available, otherwise fallback to avatar
+                      src={previewURL || avatar}
                       alt=""
                       className="w-full rounded-full"
                     />
@@ -170,10 +207,15 @@ const SignUp = () => {
                 </div>
                 <div className="mt-7">
                   <button
+                    disabled={loading}
                     type="submit"
                     className="w-full bg-primaryColor text-white py-2 rounded-md"
                   >
-                    Register
+                    {loading ? (
+                      <HashLoader size={35} color="#ffffff" />
+                    ) : (
+                      "Register"
+                    )}
                   </button>
                 </div>
                 <p className="mt-5 text-textColor text-center">
